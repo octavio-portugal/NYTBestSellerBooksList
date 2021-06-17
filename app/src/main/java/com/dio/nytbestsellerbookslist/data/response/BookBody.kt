@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class BookBody (
 
-    @SerializedName("results") var results : List<BookResponse>
+    @SerializedName("results") var results : MutableList<BookResponse>
 )

@@ -5,23 +5,30 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dio.nytbestsellerbookslist.R
+import com.dio.nytbestsellerbookslist.data.NytAPI
+import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.dio.nytbestsellerbookslist.data.response.BookBody
 import com.dio.nytbestsellerbookslist.data.response.BookDetails
-import kotlinx.android.synthetic.main.bookdetails_item.*
+import com.dio.nytbestsellerbookslist.data.retrotif
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
-import kotlinx.android.synthetic.main.bookdetails_item.view.iv_book_cover
 import kotlinx.android.synthetic.main.fragment_best_sellers_list.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class BestSellersList : Fragment() {
 
 
-    private lateinit var bestSelleeAdapter:BestSellerAdapter
+    private lateinit var bestSellerAdapter:BestSellerAdapter
 
+
+    private var booksLiveData: MutableLiveData<List<BookModel>> = MutableLiveData()
 
     companion object{
         fun newInstance(): BestSellersList{
@@ -44,38 +51,52 @@ class BestSellersList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val books: MutableList<BookDetails> = ArrayList()
+        val books: MutableList<BookDetails> = mutableListOf()
+        /** validação do adapter
         for (c in 0..7){
             val book = BookDetails()
             book.title = "Book$c"
             book.author = "Author$c"
             books.add(book)
         }
+*/
 
-
-        //val body = arrayListOf<BookBody>()
-        bestSelleeAdapter = BestSellerAdapter(books)
-        rv_bestseller.adapter = bestSelleeAdapter
+        bestSellerAdapter = BestSellerAdapter(books)
+        rv_bestseller.adapter = bestSellerAdapter
         rv_bestseller.layoutManager = LinearLayoutManager(context)
 
 
-        /**retrotif().create(NytAPI::class.java)
+        retrotif().create(NytAPI::class.java)
             .ListBooks()
-            .enqueue(object: Callback<BookBody>{
+            .enqueue(object: Callback<BookBody> {
                 override fun onFailure(call: Call<BookBody>, t: Throwable) {
                     Toast.makeText(context, "Error server response", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(call: Call<BookBody>, response: Response<BookBody>) {
                     if(response.isSuccessful){
-                        response.body()?.let {
+                        response.body()?.let { bookBody ->
+                            for(result in bookBody.results){
+                                val book: BookModel = BookModel(
+                                    title = result.bookdetails[0].title,
+                                    author = result.bookdetails[0].author,
+                                )
+                                books.add(book)
+
+                            }
+
+
+                            /**bestSellerAdapter.sellerlist.clear()
+                            bestSellerAdapter.sellerlist.addAll(it.results)
+                            bestSellerAdapter.notifyDataSetChanged()*/
 
                         }
                     }
 
+                    //booksLiveData.value = books
                 }
 
-            })*/
+            })
 
 
     }
@@ -104,14 +125,10 @@ class BestSellersList : Fragment() {
         fun bind (body: BookDetails){
             itemView.tv_book_title.text = body.title
             itemView.tv_book_author.text = body.author
-            iv_book_cover.clipToOutline(true)
         }
 
 
     }
 }
 
-private fun ImageView.clipToOutline(value: Boolean) {
-    iv_book_cover.clipToOutline
 
-}
