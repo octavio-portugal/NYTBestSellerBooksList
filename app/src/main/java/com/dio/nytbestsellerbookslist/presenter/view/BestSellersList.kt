@@ -13,7 +13,6 @@ import com.dio.nytbestsellerbookslist.R
 import com.dio.nytbestsellerbookslist.data.NytAPI
 import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.dio.nytbestsellerbookslist.data.response.BookBody
-import com.dio.nytbestsellerbookslist.data.response.BookDetails
 import com.dio.nytbestsellerbookslist.data.retrotif
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
 import kotlinx.android.synthetic.main.fragment_best_sellers_list.*
@@ -51,7 +50,7 @@ class BestSellersList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val books: MutableList<BookDetails> = mutableListOf()
+        val books: MutableList<BookModel> = mutableListOf()
         /** validação do adapter
         for (c in 0..7){
             val book = BookDetails()
@@ -61,7 +60,7 @@ class BestSellersList : Fragment() {
         }
 */
 
-        bestSellerAdapter = BestSellerAdapter(books)
+        bestSellerAdapter = BestSellerAdapter(books, )
         rv_bestseller.adapter = bestSellerAdapter
         rv_bestseller.layoutManager = LinearLayoutManager(context)
 
@@ -93,7 +92,7 @@ class BestSellersList : Fragment() {
                         }
                     }
 
-                    //booksLiveData.value = books
+                    booksLiveData.value = books
                 }
 
             })
@@ -104,10 +103,10 @@ class BestSellersList : Fragment() {
 
 
 
-    private inner class BestSellerAdapter(internal val sellerlist: MutableList<BookDetails>):
-        RecyclerView.Adapter<BestSellersHolder>() {
+    private inner class BestSellerAdapter(internal val sellerlist: MutableList<BookModel>): RecyclerView.Adapter<BestSellersHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BestSellersHolder {
-            return BestSellersHolder(LayoutInflater.from(parent.context).inflate(R.layout.bookdetails_item, parent, false))
+            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.bookdetails_item, parent, false)
+            return BestSellersHolder(itemView)
         }
 
         override fun getItemCount(): Int = sellerlist.size
@@ -122,11 +121,14 @@ class BestSellersList : Fragment() {
 
 
     private inner class BestSellersHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind (body: BookDetails){
-            itemView.tv_book_title.text = body.title
-            itemView.tv_book_author.text = body.author
-        }
 
+        private val title = itemView.tv_book_title
+        private val author = itemView.tv_book_author
+        fun bind (body: BookModel){
+            title.text= body.title
+            author.text = body.author
+
+        }
 
     }
 }
