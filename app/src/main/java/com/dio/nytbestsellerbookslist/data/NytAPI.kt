@@ -16,7 +16,3 @@ interface NytAPI{
     ): Call<BookBody>
 }
 
-    fun retrotif(): Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.nytimes.com/svc/books/v3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()

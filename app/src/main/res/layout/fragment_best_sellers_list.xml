@@ -7,7 +7,7 @@
     tools:context=".presenter.view.BestSellersList">
 
 
-
+<!--  Colocar texto de teste direto na view, para saber recebomento de valores -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bestseller"

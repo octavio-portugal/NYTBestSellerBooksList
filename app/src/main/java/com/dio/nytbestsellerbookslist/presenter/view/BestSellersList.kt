@@ -10,10 +10,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dio.nytbestsellerbookslist.R
+import com.dio.nytbestsellerbookslist.data.ApiService
 import com.dio.nytbestsellerbookslist.data.NytAPI
 import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.dio.nytbestsellerbookslist.data.response.BookBody
-import com.dio.nytbestsellerbookslist.data.retrotif
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
 import kotlinx.android.synthetic.main.fragment_best_sellers_list.*
 import retrofit2.Call
@@ -51,21 +52,22 @@ class BestSellersList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val books: MutableList<BookModel> = mutableListOf()
-        /** validação do adapter
-        for (c in 0..7){
-            val book = BookDetails()
-            book.title = "Book$c"
-            book.author = "Author$c"
-            books.add(book)
-        }
-*/
 
-        bestSellerAdapter = BestSellerAdapter(books, )
+        bestSellerAdapter = BestSellerAdapter(books)
         rv_bestseller.adapter = bestSellerAdapter
         rv_bestseller.layoutManager = LinearLayoutManager(context)
 
 
-        retrotif().create(NytAPI::class.java)
+        /** validação do adapter
+        for (c in 0..7){
+        val book = BookDetails()
+        book.title = "Book$c"
+        book.author = "Author$c"
+        books.add(book)
+        }
+         */
+
+        ApiService.service
             .ListBooks()
             .enqueue(object: Callback<BookBody> {
                 override fun onFailure(call: Call<BookBody>, t: Throwable) {
@@ -122,11 +124,12 @@ class BestSellersList : Fragment() {
 
     private inner class BestSellersHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        private val title = itemView.tv_book_title
-        private val author = itemView.tv_book_author
+        private val textTitle = itemView.tv_book_title
+        private val textAuthor = itemView.tv_book_author
         fun bind (body: BookModel){
-            title.text= body.title
-            author.text = body.author
+            textTitle.text= body.title
+            textAuthor.text = body.author
+            Picasso.get().load(R.drawable.bookexemple).fit().into(itemView.iv_book_cover)
 
         }
 
