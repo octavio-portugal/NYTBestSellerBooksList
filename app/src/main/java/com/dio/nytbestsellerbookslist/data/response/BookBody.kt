@@ -1,8 +1,10 @@
 package com.dio.nytbestsellerbookslist.data.response
 
+import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.google.gson.annotations.SerializedName
 
-data class BookBody (
+abstract class BookBody (
 
-    @SerializedName("results") var clerresults : MutableList<BookResponse>
-)
+    @SerializedName("results") var results : List<BookDetails>
+) : List<BookModel>
+
