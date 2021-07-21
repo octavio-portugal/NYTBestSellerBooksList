@@ -25,6 +25,7 @@ class BaseActivity : AppCompatActivity() {
                 val fragment = BestSellersList.newInstance()
                 addFragment(fragment)
                 return@OnNavigationItemSelectedListener true
+
             }
 
             R.id.nav_wish -> {
@@ -43,6 +44,7 @@ class BaseActivity : AppCompatActivity() {
 
         Content = content
         bottom_menu.setOnNavigationItemSelectedListener(mOnItemSelectedListener)
+        Log.i("CLICOU:", "CLICOU")
 
 
     }

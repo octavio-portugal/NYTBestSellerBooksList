@@ -7,13 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dio.nytbestsellerbookslist.R
 import androidx.recyclerview.widget.RecyclerView
 import com.dio.nytbestsellerbookslist.data.ApiInterface
 import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.dio.nytbestsellerbookslist.data.response.BookBody
+import com.dio.nytbestsellerbookslist.data.response.BookInformations
 import com.dio.nytbestsellerbookslist.presenter.model.BooksAdapter
+import com.dio.nytbestsellerbookslist.presenter.model.BooksViewModel
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.bookdetails_item.*
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
 import kotlinx.android.synthetic.main.fragment_best_sellers_list.*
 import kotlinx.android.synthetic.main.fragment_best_sellers_list.view.*
@@ -26,8 +32,8 @@ class BestSellersList : Fragment() {
 
 
     // private lateinit var bestSellerAdapter:BestSellerAdapter
-    private lateinit var booksAdapter: BooksAdapter
-
+    lateinit var recyclerView: RecyclerView
+    lateinit var recyclerAdapter: BooksAdapter
 
     //private var booksLiveData: MutableLiveData<List<BookModel>> = MutableLiveData()
 
@@ -54,107 +60,130 @@ class BestSellersList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val books = listOf<BookModel>()
+        val books = arrayListOf<BookInformations>()
         val booksAdapter = BooksAdapter(books)
         rv_bestseller.adapter = booksAdapter
         rv_bestseller.layoutManager = LinearLayoutManager(context)
 
 
+        val viewModel: BooksViewModel = ViewModelProviders.of(this).get(BooksViewModel::class.java)
 
-
-        var book: MutableList<BookModel> = mutableListOf<BookModel>()
-
-        val apiInterface = ApiInterface.iniciaRetrofit()?.getBooks()
-
-        apiInterface?.enqueue(object: Callback<BookBody> {
-            override fun onResponse(call: Call<BookBody>, response: Response<BookBody>) {
-                if (book != null) {
-                    response.body()?.let { bookBody ->
-                        for (resultado in bookBody.results){
-                            val livro: BookModel = BookModel(
-                                title = resultado.bookdetails[0].title,
-                                author = resultado.bookdetails[0].author
-                            )
-                            book.add(livro)
-                        }
-
-                    }
-                    Toast.makeText(context, "RESPONDEU", Toast.LENGTH_SHORT).show()
-                    Log.i("RESPONDEU", "RESPONDEU" )
+        viewModel.booksLiveData.observe(viewLifecycleOwner, Observer {
+            it?.let {books ->
+                with(rv_bestseller){
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    setHasFixedSize(true)
+//                    adapter =  BooksAdapter(books, {book ->
+//                        val intent = BooksDetailFragment.getStartIntent(this@BestSellersList, book.titulo, book.autor)
+//                        this@BooksActivity.startActivity(intent)
+//
+//                    })
                 }
             }
-
-            override fun onFailure(call: Call<BookBody>, t: Throwable) {
-                if (book != null){
-                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
-                    Log.i("ERRO", "FALHOU")
-                }
-
-            }
-
         })
+
+        viewModel.getBooks()
     }
+
+//        comentario
+//        var book: MutableList<BookInformations> = mutableListOf<BookInformations>()
+
+//        val apiInterface = ApiInterface.iniciaRetrofit()?.getBooks()
+//
+//        apiInterface?.enqueue(object : Callback<BookBody> {
+//            override fun onResponse(call: Call<BookBody>, response: Response<BookBody>) {
+//                if (response.isSuccessful){
+//                    response.body()?.let {
+//                        booksAdapter.books.clear()
+//                        booksAdapter.books.add(it.results)
+//                        booksAdapter.notifyDataSetChanged()
+//                    }
+//                    // comentario
+////                if (books != null) {
+////                    response.body()?.let { bookBody ->
+////                        for (resultado in bookBody.results) {
+////                            val livro: BookInformations = BookInformations(
+////                                title =  resultado.bookdetails[0].title,
+////                                author = resultado.bookdetails[0].author
+////                            )
+////                            books.add(livro)
+////                            booksAdapter.notifyDataSetChanged()
+////                        }
+//
+//                    }
+//                    Toast.makeText(context, "RESPONDEU", Toast.LENGTH_SHORT).show()
+//                    Log.i("RESPONDEU", "RESPONDEU")
+//                }
+////            }
+//
+//
+//            override fun onFailure(call: Call<BookBody>, t: Throwable) {
+//                if (books != null) {
+//                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+//                    Log.i("ERRO", "FALHOU")
+//                }
+//
+//            }
+//
+//        })
+//    }
 
 }
 
 
+/**
+val books: MutableList<BookModel> = mutableListOf()
+
+
+bestSellerAdapter = BestSellerAdapter(books)
+rv_bestseller.adapter = bestSellerAdapter
+rv_bestseller.layoutManager = LinearLayoutManager(context)
+
+
+// validação do adapter
+for (c in 0..7){
+val book = BookDetails()
+book.title = "Book$c"
+book.author = "Author$c"
+books.add(book)
+}
+
+
+ApiService.service
+.ListBooks()
+.enqueue(object: Callback<BookBody> {
+override fun onFailure(call: Call<BookBody>, t: Throwable) {
+Toast.makeText(context, "Error server response", Toast.LENGTH_SHORT).show()
+}
+
+override fun onResponse(call: Call<BookBody>, response: Response<BookBody>) {
+if(response.isSuccessful){
+response.body()?.let { bookBody ->
+for(result in bookBody.results){
+val book: BookModel = BookModel(
+title = result.bookdetails[0].title,
+author = result.bookdetails[0].author,
+)
+books.add(book)
+
+}
+
+
+bestSellerAdapter.sellerlist.clear()
+bestSellerAdapter.sellerlist.addAll(it.results)
+bestSellerAdapter.notifyDataSetChanged()
+
+}
+}
+
+booksLiveData.value = books
+}
+
+})
 
 
 
-
-    /**
-    val books: MutableList<BookModel> = mutableListOf()
-
-
-    bestSellerAdapter = BestSellerAdapter(books)
-    rv_bestseller.adapter = bestSellerAdapter
-    rv_bestseller.layoutManager = LinearLayoutManager(context)
-
-
-    // validação do adapter
-    for (c in 0..7){
-    val book = BookDetails()
-    book.title = "Book$c"
-    book.author = "Author$c"
-    books.add(book)
-    }
-
-
-    ApiService.service
-    .ListBooks()
-    .enqueue(object: Callback<BookBody> {
-    override fun onFailure(call: Call<BookBody>, t: Throwable) {
-    Toast.makeText(context, "Error server response", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResponse(call: Call<BookBody>, response: Response<BookBody>) {
-    if(response.isSuccessful){
-    response.body()?.let { bookBody ->
-    for(result in bookBody.results){
-    val book: BookModel = BookModel(
-    title = result.bookdetails[0].title,
-    author = result.bookdetails[0].author,
-    )
-    books.add(book)
-
-    }
-
-
-    bestSellerAdapter.sellerlist.clear()
-    bestSellerAdapter.sellerlist.addAll(it.results)
-    bestSellerAdapter.notifyDataSetChanged()
-
-    }
-    }
-
-    booksLiveData.value = books
-    }
-
-    })
-
-
-
-    // getTextsTest()
+// getTextsTest()
 
 }
 
@@ -164,7 +193,7 @@ val testAuthor = tv_book_test_title
 testTitle.text = body.title
 testAuthor.text = body.author
 }
- */
+*/
 
 /**
 private inner class BestSellerAdapter(internal val sellerlist: MutableList<BookModel>): RecyclerView.Adapter<BestSellersHolder>() {

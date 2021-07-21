@@ -8,3 +8,15 @@ abstract class BookBody (
     @SerializedName("results") var results : List<BookDetails>
 ) : List<BookModel>
 
+class BookDetails (
+
+    @SerializedName("book_details") val bookdetails : List<BookInformations>
+)
+
+
+class BookInformations(
+
+    @SerializedName("title") var titulo: String = "",
+    @SerializedName("author") var autor: String = ""
+)
+

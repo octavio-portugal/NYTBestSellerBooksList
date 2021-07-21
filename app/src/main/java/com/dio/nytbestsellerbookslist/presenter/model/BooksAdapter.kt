@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dio.nytbestsellerbookslist.R
-import com.dio.nytbestsellerbookslist.data.model.BookModel
+import com.dio.nytbestsellerbookslist.data.response.BookInformations
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
 
-class BooksAdapter(var books: List<BookModel>): RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
+class BooksAdapter(var books: MutableList<BookInformations>): RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
 
 
@@ -28,9 +28,9 @@ class BooksAdapter(var books: List<BookModel>): RecyclerView.Adapter<BooksAdapte
         var titulo = itemView.tv_book_title
         var autor = itemView.tv_book_author
 
-        fun bind(book: BookModel){
-            titulo.text = book.title
-            autor.text = book.author
+        fun bind(book: BookInformations){
+            titulo.text = book.titulo
+            autor.text = book.autor
         }
 
     }
