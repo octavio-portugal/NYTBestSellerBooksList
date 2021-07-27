@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.dio.nytbestsellerbookslist.R
 import com.dio.nytbestsellerbookslist.data.ApiInterface
 import com.dio.nytbestsellerbookslist.data.model.BookModel
@@ -39,4 +41,7 @@ class TesteActivity : AppCompatActivity() {
 
         })
     }
+
+
+       // private inner class TesteBooksAdapter: RecyclerView.Adapter<>
 }

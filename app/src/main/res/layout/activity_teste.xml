@@ -7,10 +7,8 @@
     tools:context=".presenter.view.TesteActivity"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/list_teste"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_teste_activity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dio.nytbestsellerbookslist.R
+import com.dio.nytbestsellerbookslist.data.model.BookModel
 import com.dio.nytbestsellerbookslist.data.response.BookInformations
 import kotlinx.android.synthetic.main.bookdetails_item.view.*
 
-class BooksAdapter(var books: MutableList<BookInformations>): RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
+class BooksAdapter(var books: MutableList<BookModel>): RecyclerView.Adapter<BooksAdapter.BooksViewHolder>() {
 
 
 

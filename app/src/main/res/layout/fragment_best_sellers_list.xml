@@ -6,14 +6,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presenter.view.BestSellersList">
 
+    <TextView
+        android:id="@+id/teste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Teste"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="15dp"/>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bestseller"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/teste"
+        android:visibility="visible"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
